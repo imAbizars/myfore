@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useRef } from "react";
 import { useCreateProduct } from "@/hooks/product/usecreateproduct";
 import { useFetchProducts } from "@/hooks/product/usefetchproducts";
+import { useDeleteProduct } from "@/hooks/product/usedeleteproducts";
 import { axiosInstance } from "@/lib/axios";
 
 export default function ProductContent() {
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [image, setImage] = useState(null);
+  const imageInputRef = useRef(null)
   const [categoryName, setCategoryName] = useState("");
   const [editId, setEditId] = useState(null); // simpan id product yang sedang diedit
 
@@ -19,6 +21,15 @@ export default function ProductContent() {
       resetForm();
       refetch(); // refresh daftar produk
     },
+  });
+  const {mutate:deleteproduct} = useDeleteProduct({
+    onSuccess:()=>{
+      alert("Produk Berhasil Dihapus!");
+      refetch();
+    },
+    onError:()=>{
+      alert("Terjadi Kesalahan Saat Menghapus");
+    }
   });
 
   const handleSubmit = (e) => {
@@ -49,24 +60,25 @@ export default function ProductContent() {
     setName(product.name);
     setPrice(product.price);
     setCategoryName(product.category);
-    setImage(null); // reset, gambar lama biar tetap di-backend kalau tidak diubah
+    setImage(null);
+     // reset, gambar lama biar tetap di-backend kalau tidak diubah
   };
 
   const handleDelete = async (id) => {
     if (confirm("Yakin ingin menghapus produk ini?")) {
-      await axiosInstance.delete(`/products/${id}`, {
-        withCredentials: true,
-      });
-      refetch();
+      deleteproduct(id);
     }
   };
-
+//pr handle edit
   const resetForm = () => {
     setEditId(null);
     setName("");
     setPrice("");
     setImage(null);
     setCategoryName("");
+    if(imageInputRef.current){
+      imageInputRef.current.value = ""
+    }
   };
 
   return (
@@ -101,6 +113,7 @@ export default function ProductContent() {
             <label className="block font-semibold mb-1">Gambar</label>
             <input
               type="file"
+              ref={imageInputRef}
               onChange={(e) => setImage(e.target.files[0])}
               accept="image/*"
               className="w-full p-2 border rounded"
@@ -144,9 +157,7 @@ export default function ProductContent() {
             )}
           </div>
         </form>
-      </div>
-
-      <h2 className="text-xl font-bold mb-2">Daftar Produk</h2>
+        <h2 className="text-2xl font-bold pt-4 mb-4">Daftar Produk</h2>
       {isLoading ? (
         <p>Loading...</p>
       ) : (
@@ -188,6 +199,9 @@ export default function ProductContent() {
       </ul>
       
       )}
+      </div>
+          
+     
     </>
   );
 }

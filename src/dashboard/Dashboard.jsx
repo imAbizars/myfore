@@ -1,6 +1,5 @@
 import React, { useState,useEffect } from "react";
 import { Menu, X } from "lucide-react";
-import { axiosInstance } from "@/lib/axios";
 import ProductContent from "@/dashboard/products/products"; // Import komponen produk
 
 export default function Dashboard() {
