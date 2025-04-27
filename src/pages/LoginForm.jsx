@@ -72,6 +72,9 @@ export default function LoginForm() {
             {error.response?.data?.message || "Login gagal"}
           </p>
         )}
+        <Button onClick={()=>navigate("/register") }>
+            Register
+        </Button>
       </form>
     </div>
   );

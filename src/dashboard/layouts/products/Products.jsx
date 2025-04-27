@@ -1,7 +1,5 @@
 import React, { useState, useEffect,useRef } from "react";
-import { useCreateProduct } from "@/hooks/product/usecreateproduct";
-import { useFetchProducts } from "@/hooks/product/usefetchproducts";
-import { useDeleteProduct } from "@/hooks/product/usedeleteproducts";
+import { useCreateProduct,useDeleteProduct,useEditProduct,useFetchCategories,useFetchProducts } from "@/hooks/product/index";
 import { axiosInstance } from "@/lib/axios";
 
 export default function ProductContent() {
@@ -12,9 +10,11 @@ export default function ProductContent() {
   const [categoryName, setCategoryName] = useState("");
   const [editId, setEditId] = useState(null); // simpan id product yang sedang diedit
 
+  //product
   const { data: productsResponse, isLoading, refetch } = useFetchProducts({});
   const products = productsResponse?.data || [];
-
+  //categories
+  const {data:categories} = useFetchCategories({});
   const createProduct = useCreateProduct({
     onSuccess: () => {
       alert(editId ? "Produk berhasil diupdate!" : "Produk berhasil ditambahkan!");
@@ -83,9 +83,9 @@ export default function ProductContent() {
 
   return (
     <>
-      <h1 className="text-2xl font-bold mb-4">{editId ? "Edit Produk" : "Tambah Produk"}</h1>
 
-      <div className="bg-white p-4 rounded shadow mb-6">
+      <h1 className="text-3xl font-bold mb-4 text-white">Product Service</h1>
+      <div className="bg-white p-4 rounded-xl shadow mb-6">
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block font-semibold mb-1">Nama Produk</label>
@@ -124,19 +124,26 @@ export default function ProductContent() {
 
           <div>
             <label className="block font-semibold mb-1">Kategori</label>
-            <input
-              type="text"
+            <select 
               value={categoryName}
-              onChange={(e) => setCategoryName(e.target.value)}
+              onChange={(e)=>setCategoryName(e.target.value)}
               className="w-full p-2 border rounded"
               required
-            />
+            >
+              <option value="">Pilih Kategori</option>
+              {categories?.map((category) => (
+                <option key={category.id} value={category.name}>
+                  {category.name}
+                </option>
+              ))}
+            </select>
           </div>
+
 
           <div className="flex items-center gap-4">
             <button
               type="submit"
-              className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded"
+              className="bg-[#ACC572] hover:bg-[#B8D575] text-white py-2 px-4 rounded"
               disabled={createProduct.isPending}
             >
               {createProduct.isPending
@@ -183,13 +190,13 @@ export default function ProductContent() {
             <div className="flex gap-2">
               <button
                 onClick={() => handleEdit(product)}
-                className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600"
+                className="bg-yellow-600 text-white px-3 py-1 rounded hover:bg-yellow-500"
               >
                 Edit
               </button>
               <button
                 onClick={() => handleDelete(product.id)}
-                className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
+                className="bg-[#A31D1D] text-white px-3 py-1 rounded hover:bg-red-700"
               >
                 Hapus
               </button>
