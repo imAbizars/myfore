@@ -7,7 +7,7 @@ export const useFetchPesan = ({onError})=>{
             const pesanresponse = await axiosInstance.get("/pesan");
             return pesanresponse;
         },
-        queryKey:["fetchpesan"],
+        queryKey:["pesan"],
         onError
     });
 }

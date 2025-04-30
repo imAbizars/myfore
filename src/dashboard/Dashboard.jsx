@@ -1,5 +1,5 @@
 import React, { useState,useEffect } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X,NotepadText ,Coffee} from "lucide-react";
 import ProductContent from "./layouts/products/Products"; 
 import PesanContent from "./layouts/pesan/Pesan";
 
@@ -53,10 +53,10 @@ export default function Dashboard() {
               setActiveTab("pesanan");
               setSidebarOpen(false);
             }}
-            className={`block w-full font-bold text-left p-2  rounded hover:bg-[#B8D575] ${
+            className={`flex w-full font-bold text-left p-2  rounded hover:bg-[#B8D575] ${
               activeTab === "pesanan" ? "bg-[#B8D575]" : ""
             }`}
-          >
+          ><NotepadText className="mr-2"/>
             Pesanan User
           </button>
           <button
@@ -64,10 +64,10 @@ export default function Dashboard() {
               setActiveTab("product");
               setSidebarOpen(false);
             }}
-            className={`block w-full text-left p-2 rounded hover:bg-[#B8D575] ${
+            className={`flex w-full text-left p-2 rounded hover:bg-[#B8D575] ${
               activeTab === "product" ? "bg-[#B8D575]" : ""
             }`}
-          >
+          ><Coffee className="mr-2"/>
             Produk
           </button>
         </nav>

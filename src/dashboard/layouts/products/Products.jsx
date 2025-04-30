@@ -83,7 +83,6 @@ export default function ProductContent() {
 
   return (
     <>
-
       <h1 className="text-3xl font-bold mb-4 text-white">Product Service</h1>
       <div className="bg-white p-4 rounded-xl shadow mb-6">
         <form onSubmit={handleSubmit} className="space-y-4">
