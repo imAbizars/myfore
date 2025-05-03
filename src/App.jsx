@@ -18,7 +18,7 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}> 
       <Router>
-        <div className="border border-black h-screen">
+        <div className="h-screen">
           <Routes>
             <Route path="/" element={<LoginForm />} />
             <Route path="/dashboard" element={<Dashboard />} />

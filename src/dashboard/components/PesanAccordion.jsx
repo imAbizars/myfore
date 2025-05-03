@@ -38,20 +38,20 @@ export default function PesanAccordion({ pesan, onEditStatus }) {
 
           {/* Accordion Content */}
           <div
-            className={`px-4 transition-all duration-400 overflow-hidden ${
+            className={`px-4 space-y-2 transition-all duration-400 overflow-hidden ${
               openIndex === index ? "max-h-[1000px] bg-white" : "max-h-0"
             }`}
           >
-            <div className="mb-2">
+            <div className="mt-2">
               <strong>Status :</strong> {item.status}
             </div>
-            <div className="mb-2">
+            <div className="">
               <strong>Nama :</strong> {item.userName}
             </div>
-            <div className="mb-2">
+            <div >
               <strong>Alamat :</strong> {item.address}
             </div>
-            <div className="mb-2">
+            <div className="">
               <strong>Total Harga:</strong> {item.totalPrice}
             </div>
 
