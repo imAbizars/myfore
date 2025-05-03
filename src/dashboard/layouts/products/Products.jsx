@@ -3,6 +3,7 @@ import { useFetchProducts, useDeleteProduct } from "@/hooks/product/index";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { toast } from "sonner";
+import { Loader } from "lucide-react";
 import ModalProduct from "./modalproducts";
 import DeleteModal from "./deletemodal";
 
@@ -149,7 +150,7 @@ export default function Products() {
       </Dialog>
       
       {productIsLoading ? (
-        <p>Memuat produk...</p>
+        <Loader className="animate-spin"/>
       ) : (
         <div className="mt-4">{renderProducts()}</div>
       )}

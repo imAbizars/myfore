@@ -21,10 +21,10 @@ export default function DeleteModal({
         <AlertDialogHeader>
           <AlertDialogTitle>Ingin Menghapus Produk Ini?</AlertDialogTitle>
         </AlertDialogHeader>
-        <div className="flex justify-end gap-2 mt-4">
+        <div className="flex justify-between mx-27 gap-2 mt-6">
           <AlertDialogCancel
             onClick={onCancel}
-            className="bg-gray-200"
+            className="bg-gray-200 "
           >
             Tidak
           </AlertDialogCancel>
