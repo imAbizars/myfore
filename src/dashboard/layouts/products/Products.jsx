@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useFetchProducts, useDeleteProduct } from "@/hooks/product/index";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
+import { toast } from "sonner";
 import ModalProduct from "./modalproducts";
+import DeleteModal from "./deletemodal";
 
 export default function Products() {
   const {
@@ -14,13 +16,25 @@ export default function Products() {
       alert("Ada kesalahan");
     },
   });
+  const deleteProduct = useDeleteProduct({
+    onSuccess: () => {
+      refetchProducts();
+      setShowDeleteDialog(false);
+      setSelectedProductToDelete(null);
+    },
+  });
+  
+
   
   const [openModal, setOpenModal] = useState(false);
   const [editData, setEditData] = useState(null);
   const [sortedProducts, setSortedProducts] = useState([]);
   const [lastModifiedId, setLastModifiedId] = useState(null);
-  
-  
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [selectedProductToDelete, setSelectedProductToDelete] = useState(null);
+
+
+  //sorted data
   useEffect(() => {
     if (data?.data) {
       console.log("Data berubah, LastModifiedId:", lastModifiedId);
@@ -40,7 +54,7 @@ export default function Products() {
           const newSortedProducts = [...data.data];
           const modifiedProduct = newSortedProducts.splice(modifiedProductIndex, 1)[0];
           newSortedProducts.unshift(modifiedProduct);
-          console.log("Data setelah diurutkan manual:", newSortedProducts);
+          console.log("setelah diurutkan manual:", newSortedProducts);
           setSortedProducts(newSortedProducts);
         } else {
           console.log("Produk dengan ID", lastModifiedId, "tidak ditemukan dalam data");
@@ -53,19 +67,33 @@ export default function Products() {
     }
   }, [data, lastModifiedId]);
   
-
+  //handle berhasil
   const handleProductSuccess = (productId) => {
     setLastModifiedId(productId);
     refetchProducts();
     setOpenModal(false);
     setEditData(null);
   };
+  //handle delete
+  const handleDelete = () => {
+    deleteProduct.mutate(selectedProductToDelete.id, {
+      onSuccess: () => {
+        refetchProducts();
+        setShowDeleteDialog(false);
+        setSelectedProductToDelete(null);
+        toast.success("Produk berhasil dihapus.");
+      },
+      onError: () => {
+        alert("Gagal menghapus produk");
+      },
+    });
+  };
   
   const renderProducts = () => {
     if (!sortedProducts || !sortedProducts.length) return <p>Tidak ada produk</p>;
     
     return sortedProducts.map((product) => (
-      <div key={product.id} className="mb-4">
+      <div key={product.id} className="mb-4 ">
         <div className="flex justify-between items-center p-4 border rounded shadow">
           <div className="flex items-center gap-4">
             <img
@@ -90,9 +118,15 @@ export default function Products() {
             >
               Edit
             </Button>
-            <Button className="bg-[#A31D1D] hover:bg-red-700">
+            <Button
+             className="bg-[#A31D1D] hover:bg-red-700"
+             onClick={()=>{
+              setSelectedProductToDelete(product);
+              setShowDeleteDialog(true);
+             }}>
               Hapus
             </Button>
+            
           </div>
         </div>
       </div>
@@ -103,7 +137,7 @@ export default function Products() {
     <div className="bg-white mb-6 p-4 rounded-xl shadow">
       <Dialog open={openModal} onOpenChange={setOpenModal}>
         <DialogTrigger asChild>
-          <Button size="lg" className="mb-5 bg-[#ACC572] hover:bg-[#B8D575]">
+          <Button size="lg" className="bg-[#ACC572] hover:bg-[#B8D575]">
             Tambah Produk
           </Button>
         </DialogTrigger>
@@ -118,6 +152,14 @@ export default function Products() {
         <p>Memuat produk...</p>
       ) : (
         <div className="mt-4">{renderProducts()}</div>
+      )}
+      {selectedProductToDelete && (
+        <DeleteModal
+          open={showDeleteDialog}
+          onOpenChange={setShowDeleteDialog}
+          onConfirm={handleDelete}
+          onCancel={() => setShowDeleteDialog(false)}
+        />
       )}
     </div>
   );

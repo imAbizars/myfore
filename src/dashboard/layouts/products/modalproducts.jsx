@@ -6,11 +6,12 @@ import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useFetchCategories, useCreateProduct, useEditProduct } from "@/hooks/product/index";
+import { toast } from "sonner";
 
 export default function ModalProduct({ onSuccess, editData }) {
   const { mutate: createProduct, isLoading: createProductLoading } = useCreateProduct({
     onSuccess: (res) => {
-      alert("Produk berhasil ditambahkan");
+      toast.success("Produk Berhasil Ditambahkan");
       form.reset();
       //  debugging
       if (res.data && res.data.id) {
@@ -24,7 +25,7 @@ export default function ModalProduct({ onSuccess, editData }) {
 
   const { mutate: editProduct } = useEditProduct({
     onSuccess: (res) => {
-      alert("Produk berhasil diedit");
+      toast.success("Produk Berhasil di Edit")
       if (res.data && res.data.id) {
         onSuccess?.(res.data.id);
       } else if (editData && editData.id) {
